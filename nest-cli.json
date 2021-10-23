@@ -1,0 +1,18 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "projects": {
+    "script-case": {
+      "type": "library",
+      "root": "libs/script-case",
+      "entryFile": "index",
+      "sourceRoot": "libs/script-case/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/script-case/tsconfig.lib.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "webpack": true
+  }
+}
