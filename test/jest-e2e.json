@@ -1,0 +1,21 @@
+{
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "scriptcase/auth/script-case/(.*)": "<rootDir>/../libs/auth/script-case/src/$1",
+    "scriptcase/auth/script-case": "<rootDir>/../libs/auth/script-case/src",
+    "ScriptCase/auth/script-case/(.*)": "<rootDir>/../libs/auth/script-case/src/$1",
+    "ScriptCase/auth/script-case": "<rootDir>/../libs/auth/script-case/src",
+    "ScriptCase/script-case/(.*)": "<rootDir>/../libs/script-case/src/$1",
+    "ScriptCase/script-case": "<rootDir>/../libs/script-case/src"
+  }
+}
