@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import Usuario from './auth/usuario.entity';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -16,7 +16,8 @@ import Usuario from './auth/usuario.entity';
       name: 'default',
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [Usuario],
+      entities: [join(__dirname, 'dist', '**', '*.entity.{js,ts}')],
+      autoLoadEntities: true,
     }),
   ],
   controllers: [AppController],
