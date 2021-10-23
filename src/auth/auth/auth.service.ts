@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import CreateLoginDTO from '../create-login.dto';
 import Usuario from '../usuario.entity';
 import UsuariosRepository from './users.repository';
 
@@ -10,7 +11,7 @@ export class AuthService {
     private usuariosRepository: UsuariosRepository,
   ) {}
 
-  async findUser(matricula: string): Promise<Usuario> {
-    return this.usuariosRepository.findByMatricula(matricula);
+  async findUser(userData: CreateLoginDTO): Promise<Usuario> {
+    return this.usuariosRepository.findByMatricula(userData);
   }
 }
