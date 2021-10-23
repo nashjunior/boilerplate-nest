@@ -1,9 +1,10 @@
-import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
+
 import { validate } from 'class-validator';
 import { ScriptCaseService } from 'ScriptCase/script-case';
+import AppError from 'src/app.exception';
 import CreateLoginDTO from '../create-login.dto';
 import { AuthService } from './auth.service';
-import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -13,27 +14,28 @@ export class AuthController {
   ) {}
 
   @Post()
-  async login(
-    @Body() loginData: CreateLoginDTO,
-    @Res() response: Response,
-  ): Promise<void> {
+  async login(@Body() loginData: CreateLoginDTO): Promise<void> {
     await validate(loginData);
 
     const { matricula, senha } = loginData;
 
-    const [encryptedPassword, user] = await Promise.all([
-      this.scriptcaseService.encodePassword(senha),
-      this.authService.findUser(matricula),
-    ]);
+    const encryptedPassword = this.scriptcaseService.encodePassword(senha);
+
+    const user = await this.authService.findUser({
+      matricula,
+      senha: encryptedPassword,
+    });
 
     if (!user)
-      response
-        .status(HttpStatus.UNAUTHORIZED)
-        .json({ message: 'Usuario não encontrado ou senha inválida' });
+      throw new AppError(
+        'Usuario não encontrado ou senha inválida',
+        HttpStatus.UNAUTHORIZED,
+      );
 
     if (user.usu_senha !== encryptedPassword)
-      response
-        .status(HttpStatus.UNAUTHORIZED)
-        .json({ message: 'Usuario não encontrado ou senha inválida' });
+      throw new AppError(
+        'Usuario não encontrado ou senha inválida',
+        HttpStatus.UNAUTHORIZED,
+      );
   }
 }
