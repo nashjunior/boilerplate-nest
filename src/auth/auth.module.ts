@@ -6,22 +6,23 @@ import { ScriptCaseModule } from 'ScriptCase/script-case';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import UsuariosRepository from './auth/users.repository';
+import JwtStrategyService from './jwt-strategy/jwt-strategy.service';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategyService],
   imports: [
     ScriptCaseModule,
-    TypeOrmModule.forFeature([UsuariosRepository]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async () => ({
-        secretOrPrivateKey: process.env.APP_SECRET,
+        secretOrKey: process.env.APP_SECRET,
         signOptions: {
           expiresIn: 18000,
         },
       }),
     }),
+    TypeOrmModule.forFeature([UsuariosRepository]),
   ],
 })
 export class AuthModule {}
