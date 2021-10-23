@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import AppError from 'src/app.exception';
 import CreateLoginDTO from '../create-login.dto';
 import Usuario from '../usuario.entity';
 import UsuariosRepository from './users.repository';
@@ -11,7 +12,15 @@ export class AuthService {
     private usuariosRepository: UsuariosRepository,
   ) {}
 
-  async findUser(userData: CreateLoginDTO): Promise<Usuario> {
-    return this.usuariosRepository.findByMatricula(userData);
+  async handleLogin(userData: CreateLoginDTO): Promise<Usuario> {
+    const user = await this.usuariosRepository.findByMatricula(userData);
+
+    if (!user)
+      throw new AppError(
+        'Usuario não encontrado ou senha inválida',
+        HttpStatus.UNAUTHORIZED,
+      );
+
+    return user;
   }
 }
