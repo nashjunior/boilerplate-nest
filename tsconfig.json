@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "paths": {
+      "scriptcase/auth/script-case": [
+        "libs/auth/script-case/src"
+      ],
+      "scriptcase/auth/script-case/*": [
+        "libs/auth/script-case/src/*"
+      ],
+      "ScriptCase/auth/script-case": [
+        "libs/auth/script-case/src"
+      ],
+      "ScriptCase/auth/script-case/*": [
+        "libs/auth/script-case/src/*"
+      ],
+      "ScriptCase/script-case": [
+        "libs/script-case/src"
+      ],
+      "ScriptCase/script-case/*": [
+        "libs/script-case/src/*"
+      ]
+    }
+  }
+}
