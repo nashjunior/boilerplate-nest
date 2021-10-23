@@ -1,8 +1,8 @@
-import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 import { validate } from 'class-validator';
 import { ScriptCaseService } from 'ScriptCase/script-case';
-import AppError from 'src/app.exception';
 import CreateLoginDTO from '../create-login.dto';
 import { AuthService } from './auth.service';
 
@@ -11,31 +11,28 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private scriptcaseService: ScriptCaseService,
+    private jwtService: JwtService,
   ) {}
 
   @Post()
-  async login(@Body() loginData: CreateLoginDTO): Promise<void> {
+  async login(@Body() loginData: CreateLoginDTO): Promise<{ token: string }> {
     await validate(loginData);
 
     const { matricula, senha } = loginData;
 
     const encryptedPassword = this.scriptcaseService.encodePassword(senha);
 
-    const user = await this.authService.findUser({
+    const user = await this.authService.handleLogin({
       matricula,
       senha: encryptedPassword,
     });
 
-    if (!user)
-      throw new AppError(
-        'Usuario não encontrado ou senha inválida',
-        HttpStatus.UNAUTHORIZED,
-      );
+    const token = this.jwtService.sign({
+      id: user.usu_codigo,
+    });
 
-    if (user.usu_senha !== encryptedPassword)
-      throw new AppError(
-        'Usuario não encontrado ou senha inválida',
-        HttpStatus.UNAUTHORIZED,
-      );
+    return {
+      token,
+    };
   }
 }
