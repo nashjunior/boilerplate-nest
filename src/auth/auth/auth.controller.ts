@@ -1,20 +1,19 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { validate } from 'class-validator';
 import { ScriptCaseService } from 'ScriptCase/script-case';
 import CreateLoginDTO from '../create-login.dto';
 import { AuthService } from './auth.service';
+import { JwtGuard } from './jwt.guard';
 
-@Controller('auth')
+@Controller()
 export class AuthController {
   constructor(
     private authService: AuthService,
     private scriptcaseService: ScriptCaseService,
-    private jwtService: JwtService,
   ) {}
 
-  @Post()
+  @Post('/')
   async login(@Body() loginData: CreateLoginDTO): Promise<{ token: string }> {
     await validate(loginData);
 
@@ -22,17 +21,11 @@ export class AuthController {
 
     const encryptedPassword = this.scriptcaseService.encodePassword(senha);
 
-    const user = await this.authService.handleLogin({
+    const token = await this.authService.handleLogin({
       matricula,
       senha: encryptedPassword,
     });
 
-    const token = this.jwtService.sign({
-      id: user.usu_codigo,
-    });
-
-    return {
-      token,
-    };
+    return { token };
   }
 }
